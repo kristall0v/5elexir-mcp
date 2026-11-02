@@ -283,6 +283,12 @@ def search(
             f"{', '.join(SECTIONS) + ', ' + ', '.join(ARTICLE_SECTIONS)}"
         )
 
+    try:
+        limit = int(limit)
+    except (TypeError, ValueError):
+        limit = 10
+    limit = max(1, min(limit, 50))
+
     if filters:
         params = {"search": query}
         params.update(filters)
@@ -999,7 +1005,12 @@ def _strip_html(html: str) -> str:
     soup = BeautifulSoup(html, "html.parser")
     for br in soup.find_all("br"):
         br.replace_with("\n")
-    return _normalize(soup.get_text("\n"))
+    lines = []
+    for line in soup.get_text("\n").split("\n"):
+        line = _normalize(line)
+        if line:
+            lines.append(line)
+    return "\n".join(lines)
 
 
 def generate_loot(category: str, tier: str = "") -> str:

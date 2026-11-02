@@ -277,11 +277,11 @@ def _format_search(section: str, query: str, limit: int, filters: dict | None = 
     return "\n".join(lines)
 
 
-_DICE_PATTERN = re.compile(r"(\d*d\d+|\d+)")
+_DICE_PATTERN = re.compile(r"([+-]?(?:\d*d\d+|\d+))")
 
 
 def _roll(notation: str) -> str:
-    clean = re.sub(r"\s+", "", notation).lower().replace("к", "d")
+    clean = re.sub(r"\s+", "", notation).lower().replace("к", "d").replace("k", "d")
     if not clean:
         return "Ошибка: укажите нотацию броска. Формат: «2d6», «1d20+3», «3d8+1d4-2»."
 
